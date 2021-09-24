@@ -19,23 +19,47 @@ resource "random_string" "random" {
   upper = false
 }
 
+resource "random_string" "random2" {
+  length = 5
+  special = false
+  upper = false
+}
+
 # Start a container
 resource "docker_container" "nodered_container" {
-  name  = "nodered"
+  name  = join("-", ["nodered", random_string.random.result])
   image = docker_image.nodered_image.latest
   ports {
     internal = 1880
-    external = 1880
+    #external = 1880
   }
 }
 
-output "IP-Address" {
+resource "docker_container" "nodered_container2" {
+  name  = join("-", ["nodered2", random_string.random2.result])
+  image = docker_image.nodered_image.latest
+  ports {
+   internal = 1880
+   #external = 1880
+  }
+}
+
+output "IP-Address-Of-Node01" {
   value = join (":", [docker_container.nodered_container.ip_address, docker_container.nodered_container.ports[0].external])
   description = "The IP address and external port of the container"
 }
 
-output "Container-Name" {
+output "Container-Name-Of-Node01" {
   value = docker_container.nodered_container.name
   description = "The name of the container"
 }
 
+output "IP-Address-Of-Node02" {
+  value = join (":", [docker_container.nodered_container2.ip_address, docker_container.nodered_container2.ports[0].external])
+  description = "The IP address and external port of the container"
+}
+
+output "Container-Name-Of-Node02" {
+  value = docker_container.nodered_container2.name
+  description = "The name of the container"
+}

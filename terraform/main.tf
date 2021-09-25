@@ -31,6 +31,12 @@ resource "docker_container" "nodered_container" {
   }
 }
 
+# resource "docker_container" "nodered_container2" {
+#   name = "noderead-3pfl"
+#   image = docker_image.nodered_image.latest
+#   }
+# }
+
 
 # resource "random_string" "random2" {
 #   length = 5
